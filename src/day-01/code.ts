@@ -1,8 +1,10 @@
-const LIST_URL = 'https://adventofcode.com/2024/day/1/input';
+const INPUT_URL = 'https://adventofcode.com/2024/day/1/input';
 const SESSION_ID = process.env.SESSION_ID;
 
-export const getListsFromInputURL = async (): Promise<[number[], number[]]> => {
-  const response = await fetch(LIST_URL, {
+export type Input = [number[], number[]];
+
+export const getInputs = async (): Promise<Input> => {
+  const response = await fetch(INPUT_URL, {
     headers: { cookie: `session=${SESSION_ID};` },
   });
   const text = await response.text();
@@ -23,9 +25,9 @@ export const getListsFromInputURL = async (): Promise<[number[], number[]]> => {
   return [list1, list2];
 };
 
-export const findAnswer = (list1: number[], list2: number[]): number => {
-  const sortedList1 = list1.filter((i) => typeof i === 'number').sort();
-  const sortedList2 = list2.filter((i) => typeof i === 'number').sort();
+export const findSolutionToProblemOne = (input: Input): number => {
+  const sortedList1 = input[0].sort();
+  const sortedList2 = input[1].sort();
 
   const distances: number[] = [];
   for (const i in sortedList1) {
@@ -36,4 +38,14 @@ export const findAnswer = (list1: number[], list2: number[]): number => {
   }
 
   return distances.reduce((acc, x) => acc + x, 0);
+};
+
+export const findSolutionToProblemTwo = (input: Input): number => {
+  const similarities: number[] = [];
+  for (const v1 of input[0]) {
+    const count = input[1].filter((v2) => v2 === v1).length;
+    similarities.push(count * v1);
+  }
+
+  return similarities.reduce((acc, x) => acc + x, 0);
 };
